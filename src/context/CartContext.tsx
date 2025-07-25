@@ -10,6 +10,8 @@ export type CartContextType = {
   addToCart: (product: Product) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
+  isHydrated: boolean; // ✅ new
 };
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -22,17 +24,19 @@ export function useCart() {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false); // ✅ new
 
-  // Load from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("cart");
     if (stored) setCartItems(JSON.parse(stored));
+    setIsHydrated(true); // ✅ after localStorage is loaded
   }, []);
 
-  // Save to localStorage
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (isHydrated) {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    }
+  }, [cartItems, isHydrated]);
 
   const addToCart = (product: Product) => {
     setCartItems((prev) => {
@@ -60,9 +64,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cart");
+  };
+
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQuantity }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        isHydrated, // ✅ pass it
+      }}
     >
       {children}
     </CartContext.Provider>

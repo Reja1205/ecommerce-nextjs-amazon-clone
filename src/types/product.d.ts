@@ -1,5 +1,4 @@
-// src/types/product.d.ts
-
+// ✅ src/types/product.d.ts
 export type Product = {
   id: string;
   name: string;
