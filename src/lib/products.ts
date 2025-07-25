@@ -22,3 +22,7 @@ export const mockProducts = [
     image: "https://via.placeholder.com/300x200?text=Smart+Watch",
   },
 ];
+
+export function getProductById(id: string) {
+  return mockProducts.find((product) => product.id === id) || null;
+}

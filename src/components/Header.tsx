@@ -1,10 +1,18 @@
+// src/components/Header.tsx
 "use client";
 
 import Link from "next/link";
 import { useState } from "react";
+import { useCart } from "@/context/CartContext";
 
 export default function Header() {
   const [query, setQuery] = useState("");
+  const { cartItems } = useCart();
+
+  const cartCount = cartItems.reduce(
+    (total: number, item) => total + item.quantity,
+    0
+  );
 
   return (
     <header className="bg-white border-b shadow-sm sticky top-0 z-50">
@@ -35,7 +43,7 @@ export default function Header() {
         </form>
         <nav className="flex gap-4 text-sm items-center">
           <Link href="/cart" className="hover:underline">
-            🛍 Cart
+            🛍 Cart ({cartCount})
           </Link>
           <Link href="/orders" className="hover:underline hidden sm:inline">
             📦 Orders
