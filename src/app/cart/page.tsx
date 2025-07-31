@@ -1,5 +1,5 @@
-// ✅ src/app/cart/page.tsx
 "use client";
+
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,27 +13,33 @@ export default function CartPage() {
   );
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+
       {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <p className="text-gray-600">
+          Your cart is empty.{" "}
+          <Link href="/" className="text-blue-600 underline">
+            Go back to shop
+          </Link>
+        </p>
       ) : (
         <div className="space-y-4">
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex items-center border p-2 rounded shadow"
+              className="flex items-center border p-4 rounded-lg shadow-sm"
             >
               <Image
                 src={item.image}
                 alt={item.name}
                 width={80}
                 height={80}
-                className="rounded mr-4"
+                className="rounded-lg mr-4"
               />
               <div className="flex-1">
-                <h2 className="font-semibold">{item.name}</h2>
-                <p>${item.price}</p>
+                <h2 className="font-medium text-lg">{item.name}</h2>
+                <p className="text-gray-600">${item.price}</p>
                 <input
                   type="number"
                   value={item.quantity}
@@ -41,25 +47,29 @@ export default function CartPage() {
                   onChange={(e) =>
                     updateQuantity(item.id, Number(e.target.value))
                   }
-                  className="border p-1 w-16 mt-1"
+                  className="mt-2 border rounded px-2 py-1 w-20 text-center"
                 />
               </div>
               <button
                 onClick={() => removeFromCart(item.id)}
-                className="text-red-600 hover:underline ml-4"
+                className="ml-4 text-red-500 hover:underline"
               >
                 Remove
               </button>
             </div>
           ))}
 
-          <p className="text-xl font-bold">Total: ${total.toFixed(2)}</p>
-          <Link
-            href="/checkout"
-            className="inline-block bg-green-600 text-white px-6 py-2 rounded"
-          >
-            Proceed to Checkout
-          </Link>
+          <div className="mt-6">
+            <p className="text-xl font-semibold mb-2">
+              Total: ${total.toFixed(2)}
+            </p>
+            <Link
+              href="/checkout"
+              className="inline-block bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+            >
+              Proceed to Checkout
+            </Link>
+          </div>
         </div>
       )}
     </div>

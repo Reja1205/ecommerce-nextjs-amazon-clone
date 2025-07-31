@@ -1,11 +1,11 @@
-// components/ProductCard.tsx
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+// Define the Product type
 type Product = {
   id: string;
   name: string;
@@ -18,9 +18,15 @@ export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
   const [adding, setAdding] = useState(false);
 
+  // Optional: Log ID to debug
+  useEffect(() => {
+    console.log("✅ ProductCard received product:", product);
+  }, [product]);
+
   const handleAddToCart = () => {
     setAdding(true);
-    addToCart({ ...product, quantity: 1 }); // you can extend quantity later
+    // Add quantity: 1 when passing to addToCart
+    addToCart({ ...product, quantity: 1 });
     setTimeout(() => setAdding(false), 800);
   };
 

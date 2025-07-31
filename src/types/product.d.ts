@@ -1,4 +1,4 @@
-// ✅ src/types/product.d.ts
+// src/types/product.d.ts
 export type Product = {
   id: string;
   name: string;
@@ -7,6 +7,7 @@ export type Product = {
   image: string;
 };
 
-export type CartItem = Product & {
-  quantity: number;
-};
+// src/context/CartContext.tsx
+import { Product } from "@/types/product";
+
+export type CartItem = Product & { quantity: number };

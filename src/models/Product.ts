@@ -1,3 +1,4 @@
+// src/models/Product.ts
 import mongoose, { Schema } from "mongoose";
 
 const ProductSchema = new Schema({
@@ -7,5 +8,8 @@ const ProductSchema = new Schema({
   image: String,
 });
 
-export const Product =
+// ✅ Export Mongoose model (default export only)
+const Product =
   mongoose.models.Product || mongoose.model("Product", ProductSchema);
+
+export default Product;

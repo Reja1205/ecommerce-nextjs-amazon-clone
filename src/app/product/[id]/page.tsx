@@ -1,39 +1,74 @@
-// app/product/[id]/page.tsx
-import { getProductById } from "@/lib/products";
-import Image from "next/image";
+"use client";
 
-type Props = {
-  params: { id: string };
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useCart, CartItem } from "@/context/CartContext";
+
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
 };
 
-export default function ProductPage({ params }: Props) {
-  const product = getProductById(params.id);
+export default function ProductDetailPage() {
+  const params = useParams();
+  const id = params?.id as string;
+  const { addToCart } = useCart();
 
-  if (!product) {
-    return <div className="p-4 text-red-500">Product not found</div>;
-  }
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    async function fetchProduct() {
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        if (!res.ok) throw new Error("Product not found");
+        const data = await res.json();
+        setProduct(data);
+      } catch (err) {
+        console.error("Failed to load product:", err);
+        setError("Failed to load product.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
+  if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;
+  if (!product) return <p className="text-center mt-10">No product found.</p>;
+
+  const handleAddToCart = () => {
+    const cartItem: CartItem = { ...product, quantity: 1 };
+    addToCart(cartItem);
+  };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <div className="flex flex-col md:flex-row gap-6">
-        <Image
-          src={product.image}
-          alt={product.name}
-          width={400}
-          height={300}
-          className="rounded-md"
-        />
-        <div>
-          <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-          <p className="text-gray-700 mb-4">{product.description}</p>
-          <p className="text-xl font-semibold text-blue-600 mb-4">
-            ${product.price}
-          </p>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Add to Cart
-          </button>
-        </div>
-      </div>
+    <div className="max-w-3xl mx-auto p-6">
+      <Image
+        src={product.image}
+        alt={product.name}
+        width={600}
+        height={400}
+        className="w-full object-cover rounded"
+      />
+      <h1 className="text-3xl font-bold my-4">{product.name}</h1>
+      <p className="mb-4">{product.description}</p>
+      <p className="text-2xl font-semibold mb-6">${product.price.toFixed(2)}</p>
+      <button
+        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+        onClick={handleAddToCart}
+      >
+        Add to Cart
+      </button>
     </div>
   );
 }
