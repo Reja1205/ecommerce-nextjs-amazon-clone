@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/lib/mongo";
+import connectToDatabase from "@/lib/mongo";
 import Product from "@/models/Product";
 
 export async function GET() {
   try {
-    await connectDB();
+    await connectToDatabase();
 
     const products = await Product.find({});
     const productsWithId = products.map((product) => {
@@ -30,11 +30,10 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    await connectDB();
+    await connectToDatabase();
 
     const body = await req.json();
 
-    // Simple validation:
     if (!body.name || !body.price || !body.description || !body.image) {
       return NextResponse.json(
         { message: "Missing required fields" },

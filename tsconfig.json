@@ -13,16 +13,30 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "src", // ✅ So @/context maps to src/context
+
+    // 👇 Aliases (adjust based on your folder structure)
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["*"] // ✅ Treat @/xyz as src/xyz
+      "@/*": ["*"]
     },
+
+    // 👇 So Next.js and ESLint work properly
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+
+    // 👇 So your custom type extensions like next-auth.d.ts are recognized
+    "typeRoots": ["types", "./node_modules/@types"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "types/**/*.d.ts", // 👈 include your custom type files
+    "next.config.mjs"
+  ],
   "exclude": ["node_modules"]
 }

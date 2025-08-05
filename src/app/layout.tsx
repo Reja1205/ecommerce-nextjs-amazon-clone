@@ -1,21 +1,23 @@
+// /src/app/layout.tsx
 import "./globals.css";
+import { Providers } from "./provider";
 import Header from "@/components/Header";
-import { ReactNode } from "react";
 import { CartProvider } from "@/context/CartContext";
 
-export const metadata = {
-  title: "MyStore",
-  description: "Amazon-style e-commerce built by Rejaur",
-};
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-          <Header />
-          {children}
-        </CartProvider>
+        <Providers>
+          <CartProvider>
+            <Header />
+            {children}
+          </CartProvider>
+        </Providers>
       </body>
     </html>
   );

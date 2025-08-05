@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useContext } from "react";
 import { CartContext } from "@/context/CartContext";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Header() {
   const cart = useContext(CartContext);
+  const { data: session } = useSession();
 
   const totalItems =
     cart?.cartItems.reduce((total, item) => total + item.quantity, 0) ?? 0;
@@ -23,9 +25,29 @@ export default function Header() {
           <Link href="/orders" className="hover:underline hidden sm:inline">
             📦 Orders
           </Link>
-          <Link href="/login" className="hover:underline">
-            🔐 Login
-          </Link>
+
+          {!session ? (
+            <>
+              <Link href="/auth/signin" className="hover:underline">
+                🔐 Sign In
+              </Link>
+              <Link href="/auth/signup" className="hover:underline">
+                📝 Sign Up
+              </Link>
+            </>
+          ) : (
+            <>
+              <span className="mr-2">
+                👤 {session.user?.name || session.user?.email}
+              </span>
+              <button
+                onClick={() => signOut()}
+                className="hover:underline cursor-pointer bg-transparent border-none p-0"
+              >
+                🔓 Sign Out
+              </button>
+            </>
+          )}
         </nav>
       </div>
     </header>
