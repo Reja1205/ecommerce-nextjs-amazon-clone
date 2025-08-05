@@ -13,9 +13,9 @@ export default function Header() {
     cart?.cartItems.reduce((total, item) => total + item.quantity, 0) ?? 0;
 
   return (
-    <header className="bg-white border-b shadow-sm sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
-        <Link href="/" className="text-xl font-bold text-blue-600">
+        <Link href="/" className="text-xl font-bold text-white">
           🛒 MyStore
         </Link>
         <nav className="flex gap-4 text-sm items-center">

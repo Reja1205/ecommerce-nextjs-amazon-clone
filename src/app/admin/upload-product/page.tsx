@@ -1,8 +1,11 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 export default function UploadProductPage() {
+  const { data: session, status } = useSession();
+
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -11,6 +14,16 @@ export default function UploadProductPage() {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  if (status === "loading") return <p>Loading...</p>;
+
+  if (!session) return <p>Please log in to access this page.</p>;
+
+  if (session.user.role !== "admin") {
+    return (
+      <p className="text-red-600 font-bold">Access denied. Admins only.</p>
+    );
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -56,7 +69,13 @@ export default function UploadProductPage() {
 
   return (
     <div className="max-w-md mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
+      {/* Admin dashboard banner */}
+      <div className="mb-6 p-4 rounded bg-yellow-100 text-yellow-800 font-semibold text-center border border-yellow-300">
+        You are in the <span className="font-bold">Admin Dashboard</span> — only
+        admins can add products here.
+      </div>
+
+      <h1 className="text-2xl font-bold mb-4">Add New Product (Admin)</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input

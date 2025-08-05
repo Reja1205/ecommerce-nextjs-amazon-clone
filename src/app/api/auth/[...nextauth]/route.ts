@@ -6,14 +6,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import connectToDatabase from "@/lib/mongo";
 import User from "@/models/User";
-import type { Session } from "next-auth";
-import type { JWT } from "next-auth/jwt";
-import type { User as NextAuthUser } from "next-auth";
 
-// Define accepted roles
 type Role = "user" | "admin";
 
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -55,20 +51,16 @@ const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({
-      token,
-      user,
-    }: {
-      token: JWT;
-      user?: NextAuthUser & { role?: Role };
-    }) {
-      if (user?.role) {
-        token.role = user.role;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role ?? "user";
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
-      if (session.user && token.role) {
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
         session.user.role = token.role as Role;
       }
       return session;
@@ -80,6 +72,5 @@ const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-// Export API route handlers for Next.js App Router
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

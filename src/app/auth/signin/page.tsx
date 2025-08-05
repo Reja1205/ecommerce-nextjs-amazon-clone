@@ -1,19 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // If already logged in, redirect based on role
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (session?.user.role === "admin") {
+        router.push("/admin/upload-product");
+      } else {
+        router.push("/");
+      }
+    }
+  }, [status, session, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,7 +46,7 @@ export default function SignInPage() {
     if (res?.error) {
       setError(res.error);
     } else {
-      router.push("/");
+      // Successful sign-in — session hook will detect and redirect
     }
   };
 

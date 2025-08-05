@@ -11,7 +11,13 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "your-image-host.com", // add your image host if different
+        hostname: "your-image-host.com", // keep your current host
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "example.com", // <--- Added example.com here
         port: "",
         pathname: "/**",
       },
