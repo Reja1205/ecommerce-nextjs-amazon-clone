@@ -42,84 +42,125 @@ export default function SignupPage() {
         return;
       }
 
-      // Redirect to signin page after successful signup
       router.push("/auth/signin");
-    } catch (err) {
+    } catch {
       setError("Failed to signup");
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 border rounded shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center">Create Account</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-50 to-indigo-100 px-4">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-extrabold mb-8 text-center text-indigo-700">
+          Create Account
+        </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Your name"
-          value={form.name}
-          onChange={handleChange}
-          required
-          className="input"
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email address"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="input"
-        />
-
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          className="input"
-        />
-
-        <div className="flex gap-4 items-center">
-          <label>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="name"
+              className="block mb-2 font-semibold text-gray-700"
+            >
+              Name
+            </label>
             <input
-              type="radio"
-              name="role"
-              value="user"
-              checked={form.role === "user"}
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Your full name"
+              value={form.name}
               onChange={handleChange}
-              className="mr-1"
+              required
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
             />
-            User
-          </label>
-          <label>
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-2 font-semibold text-gray-700"
+            >
+              Email Address
+            </label>
             <input
-              type="radio"
-              name="role"
-              value="admin"
-              checked={form.role === "admin"}
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              value={form.email}
               onChange={handleChange}
-              className="mr-1"
+              required
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
             />
-            Admin
-          </label>
-        </div>
+          </div>
 
-        {error && <p className="text-red-500">{error}</p>}
+          <div>
+            <label
+              htmlFor="password"
+              className="block mb-2 font-semibold text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Create a password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary w-full py-2"
-        >
-          {loading ? "Signing up..." : "Sign Up"}
-        </button>
-      </form>
+          <fieldset className="space-y-2">
+            <legend className="text-gray-700 font-semibold mb-1">
+              Select Role
+            </legend>
+            <div className="flex gap-6">
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="role"
+                  value="user"
+                  checked={form.role === "user"}
+                  onChange={handleChange}
+                  className="form-radio text-indigo-600"
+                />
+                <span className="ml-2 text-gray-700">User</span>
+              </label>
+
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  checked={form.role === "admin"}
+                  onChange={handleChange}
+                  className="form-radio text-indigo-600"
+                />
+                <span className="ml-2 text-gray-700">Admin</span>
+              </label>
+            </div>
+          </fieldset>
+
+          {error && <p className="text-red-600 text-sm font-medium">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-md text-white font-semibold transition
+              ${
+                loading
+                  ? "bg-indigo-300 cursor-not-allowed"
+                  : "bg-indigo-600 hover:bg-indigo-700"
+              }`}
+          >
+            {loading ? "Signing up..." : "Sign Up"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

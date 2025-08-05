@@ -1,7 +1,7 @@
-// /src/app/layout.tsx
 import "./globals.css";
 import { Providers } from "./provider";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer"; // Import Footer
 import { CartProvider } from "@/context/CartContext";
 
 export default function RootLayout({
@@ -11,11 +11,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex flex-col min-h-screen">
         <Providers>
           <CartProvider>
             <Header />
-            {children}
+            <main className="flex-grow">{children}</main>
+            <Footer />
           </CartProvider>
         </Providers>
       </body>

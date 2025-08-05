@@ -35,46 +35,82 @@ export default function SignInPage() {
     if (res?.error) {
       setError(res.error);
     } else {
-      // Redirect to homepage or dashboard after login
       router.push("/");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 border rounded shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center">Sign In</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-50 to-indigo-100 px-4">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-extrabold mb-8 text-center text-indigo-700">
+          Sign In
+        </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email address"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="input"
-        />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-2 font-semibold text-gray-700"
+            >
+              Email Address
+            </label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={form.email}
+              onChange={handleChange}
+              required
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+            />
+          </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          className="input"
-        />
+          <div>
+            <label
+              htmlFor="password"
+              className="block mb-2 font-semibold text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Your password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+            />
+          </div>
 
-        {error && <p className="text-red-500">{error}</p>}
+          {error && <p className="text-red-600 text-sm font-medium">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary w-full py-2"
-        >
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-md text-white font-semibold transition
+              ${
+                loading
+                  ? "bg-indigo-300 cursor-not-allowed"
+                  : "bg-indigo-600 hover:bg-indigo-700"
+              }`}
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-gray-600 text-sm">
+          Don&apos;t have an account?{" "}
+          <a
+            href="/signup"
+            className="text-indigo-600 hover:underline font-semibold"
+          >
+            Sign Up
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
