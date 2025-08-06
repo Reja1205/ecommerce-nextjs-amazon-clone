@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Providers } from "./provider";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer"; // Import Footer
+import Footer from "@/components/Footer";
 import { CartProvider } from "@/context/CartContext";
 
 export default function RootLayout({
