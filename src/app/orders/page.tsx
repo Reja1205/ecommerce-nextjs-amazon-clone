@@ -12,9 +12,17 @@ export default function OrderHistoryPage() {
       try {
         const res = await fetch("/api/orders");
         const data = await res.json();
-        setOrders(data);
+
+        // ✅ Defensive check: make sure it's an array
+        if (Array.isArray(data)) {
+          setOrders(data);
+        } else {
+          console.error("Unexpected response format:", data);
+          setOrders([]); // fallback to empty array
+        }
       } catch (error) {
         console.error("❌ Failed to fetch orders:", error);
+        setOrders([]);
       } finally {
         setLoading(false);
       }

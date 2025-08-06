@@ -2,15 +2,14 @@
 
 import { useCart } from "@/context/CartContext";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
   const [isHydrated, setIsHydrated] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
   const [total, setTotal] = useState(0);
-  const [paidTotal, setPaidTotal] = useState(0);
+  const router = useRouter();
 
-  // Shipping form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
@@ -27,20 +26,10 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const orderTotal = cartItems.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    );
-    setPaidTotal(orderTotal);
-
     const order = {
-      customer: {
-        name,
-        email,
-        address,
-      },
+      customer: { name, email, address },
       items: cartItems,
-      total: orderTotal,
+      total,
     };
 
     try {
@@ -52,34 +41,22 @@ export default function CheckoutPage() {
 
       if (!res.ok) throw new Error("Failed to save order");
 
-      const savedOrder = await res.json();
-      console.log("✅ Order saved:", savedOrder);
-    } catch (error) {
-      console.error("❌ Failed to submit order:", error);
+      const data = await res.json();
+      console.log("✅ Order saved:", data.savedOrder);
+      console.log("📧 Email result:", data.emailResult);
+
+      localStorage.setItem("lastOrder", JSON.stringify(data.savedOrder));
+      localStorage.setItem("lastEmailStatus", JSON.stringify(data.emailResult));
+
+      clearCart();
+
+      router.push(`/order-confirmation?orderId=${data.savedOrder._id}`);
+    } catch (err) {
+      console.error("❌ Order submit failed:", err);
     }
-
-    // Backup to localStorage
-    localStorage.setItem("lastOrder", JSON.stringify(order));
-
-    clearCart();
-    setOrderPlaced(true);
   };
 
   if (!isHydrated) return null;
-
-  if (orderPlaced) {
-    return (
-      <div className="max-w-xl mx-auto p-6">
-        <h1 className="text-2xl font-semibold text-green-600 mb-2">
-          ✅ Order Confirmed!
-        </h1>
-        <p className="mb-4">🎉 Thank you for your purchase.</p>
-        <p className="text-lg font-medium">
-          Total paid: ${paidTotal.toFixed(2)}
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-3xl mx-auto p-6">
