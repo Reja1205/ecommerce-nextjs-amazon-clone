@@ -42,9 +42,10 @@ export default function SignupPage() {
         return;
       }
 
+      // Redirect to login after successful signup
       router.push("/auth/signin");
     } catch {
-      setError("Failed to signup");
+      setError("Failed to signup. Please try again.");
       setLoading(false);
     }
   };
@@ -62,17 +63,17 @@ export default function SignupPage() {
               htmlFor="name"
               className="block mb-2 font-semibold text-gray-700"
             >
-              Name
+              Full Name
             </label>
             <input
               id="name"
               name="name"
               type="text"
-              placeholder="Your full name"
               value={form.name}
               onChange={handleChange}
+              placeholder="Your full name"
               required
-              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
           </div>
 
@@ -87,11 +88,11 @@ export default function SignupPage() {
               id="email"
               name="email"
               type="email"
-              placeholder="you@example.com"
               value={form.email}
               onChange={handleChange}
+              placeholder="you@example.com"
               required
-              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
           </div>
 
@@ -106,17 +107,18 @@ export default function SignupPage() {
               id="password"
               name="password"
               type="password"
-              placeholder="Create a password"
               value={form.password}
               onChange={handleChange}
+              placeholder="Create a password"
               required
-              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
           </div>
 
+          {/* ✅ Role Selection */}
           <fieldset className="space-y-2">
             <legend className="text-gray-700 font-semibold mb-1">
-              Select Role
+              Choose Role
             </legend>
             <div className="flex gap-6">
               <label className="inline-flex items-center cursor-pointer">
@@ -130,7 +132,6 @@ export default function SignupPage() {
                 />
                 <span className="ml-2 text-gray-700">User</span>
               </label>
-
               <label className="inline-flex items-center cursor-pointer">
                 <input
                   type="radio"
@@ -150,16 +151,25 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-md text-white font-semibold transition
-              ${
-                loading
-                  ? "bg-indigo-300 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700"
-              }`}
+            className={`w-full py-3 rounded-md text-white font-semibold transition ${
+              loading
+                ? "bg-indigo-300 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
           >
             {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-gray-600 text-sm">
+          Already have an account?{" "}
+          <a
+            href="/auth/signin"
+            className="text-indigo-600 hover:underline font-semibold"
+          >
+            Sign In
+          </a>
+        </p>
       </div>
     </div>
   );

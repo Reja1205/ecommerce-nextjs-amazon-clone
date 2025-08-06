@@ -37,9 +37,13 @@ export default function Header() {
             </>
           ) : (
             <>
-              <span className="mr-2">
+              <Link
+                href="/profile"
+                className="mr-2 hover:underline cursor-pointer"
+                title="View Profile"
+              >
                 👤 {session.user?.name || session.user?.email}
-              </span>
+              </Link>
               <button
                 onClick={() => signOut()}
                 className="hover:underline cursor-pointer bg-transparent border-none p-0"

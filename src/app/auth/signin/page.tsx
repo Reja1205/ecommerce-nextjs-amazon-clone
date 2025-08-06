@@ -11,14 +11,16 @@ export default function SignInPage() {
   const [form, setForm] = useState({
     email: "",
     password: "",
+    selectedRole: "user", // default role
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // If already logged in, redirect based on role
+  // Redirect after successful sign-in based on session role
   useEffect(() => {
-    if (status === "authenticated") {
-      if (session?.user.role === "admin") {
+    if (status === "authenticated" && session?.user?.role) {
+      const role = session.user.role;
+      if (role === "admin") {
         router.push("/admin/upload-product");
       } else {
         router.push("/");
@@ -26,7 +28,9 @@ export default function SignInPage() {
     }
   }, [status, session, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -45,9 +49,8 @@ export default function SignInPage() {
 
     if (res?.error) {
       setError(res.error);
-    } else {
-      // Successful sign-in — session hook will detect and redirect
     }
+    // No redirect here; session update will trigger useEffect
   };
 
   return (
@@ -58,6 +61,25 @@ export default function SignInPage() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="selectedRole"
+              className="block mb-2 font-semibold text-gray-700"
+            >
+              Log in as
+            </label>
+            <select
+              id="selectedRole"
+              name="selectedRole"
+              value={form.selectedRole}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -96,17 +118,20 @@ export default function SignInPage() {
             />
           </div>
 
-          {error && <p className="text-red-600 text-sm font-medium">{error}</p>}
+          {error && (
+            <p className="text-red-600 text-sm font-medium text-center">
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-md text-white font-semibold transition
-              ${
-                loading
-                  ? "bg-indigo-300 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700"
-              }`}
+            className={`w-full py-3 rounded-md text-white font-semibold transition ${
+              loading
+                ? "bg-indigo-300 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
