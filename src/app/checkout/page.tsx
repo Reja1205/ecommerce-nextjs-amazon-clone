@@ -10,7 +10,7 @@ export default function CheckoutPage() {
   const [isHydrated, setIsHydrated] = useState(false);
   const [total, setTotal] = useState(0);
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession(); // ✅ removed unused `status`
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
