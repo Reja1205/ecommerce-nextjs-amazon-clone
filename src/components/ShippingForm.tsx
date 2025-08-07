@@ -1,4 +1,3 @@
-// src/components/ShippingForm.tsx
 "use client";
 import { useState } from "react";
 
@@ -40,12 +39,12 @@ export default function ShippingForm({
       className="space-y-4 border p-4 rounded-md mb-6"
     >
       <h2 className="text-lg font-semibold">Shipping Information</h2>
-      {["fullName", "email", "address", "city", "state", "zip"].map((field) => (
+      {(Object.keys(shippingInfo) as (keyof ShippingInfo)[]).map((field) => (
         <input
           key={field}
           name={field}
           placeholder={field[0].toUpperCase() + field.slice(1)}
-          value={(shippingInfo as any)[field]}
+          value={shippingInfo[field]}
           onChange={handleChange}
           className="w-full border px-3 py-2 rounded text-sm"
           required
