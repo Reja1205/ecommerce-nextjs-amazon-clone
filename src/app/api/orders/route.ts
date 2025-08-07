@@ -1,5 +1,3 @@
-// app/api/orders/route.ts
-
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongo";
 import OrderModel from "@/models/Order";
@@ -16,7 +14,7 @@ type OrderRequestBody = {
   }[];
   total: number;
   customer: {
-    name: string;
+    name?: string;
     address: string;
   };
 };
@@ -42,6 +40,7 @@ export async function POST(req: Request) {
       ...body,
       customer: {
         ...body.customer,
+        name: session.user.name || body.customer.name || "Unknown",
         email: session.user.email,
       },
       estimatedDelivery: getEstimatedDeliveryDate(),
