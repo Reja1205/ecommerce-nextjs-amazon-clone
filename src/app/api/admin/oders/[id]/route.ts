@@ -16,7 +16,8 @@ export async function PATCH(
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const { status } = await req.json();
+  // Explicitly type the expected body shape:
+  const { status }: { status: string } = await req.json();
 
   const updatedOrder = await OrderModel.findByIdAndUpdate(
     params.id,
